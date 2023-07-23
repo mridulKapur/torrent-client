@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "bencode": "^3.0.3"
+  }
+}
