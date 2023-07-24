@@ -9,17 +9,18 @@ export default class Queue {
 
   queue(pieceIndex) {
     const nBlocks = tp.blocksPerPiece(this._torrent, pieceIndex);
+    // console.log(this._torrent)
     for (var i = 0; i < nBlocks; i++){
       const pieceBlock = {
         index: pieceIndex,
         begin: i * tp.BLOCK_LEN,
-        length: this.blockLen(this.torrent, pieceIndex, i)
+        length: tp.blockLen(this._torrent, pieceIndex, i)
       }
       this._queue.push(pieceBlock)
     }
   }
 
-  dequeu() { return this._queue.shift(); }
-  peek() { return this.queue[0]; }
+  deque() { return this._queue.shift(); }
+  peek() { return this._queue[0]; }
   length() { return this._queue.length; } 
 }

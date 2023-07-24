@@ -4,10 +4,13 @@ import crypto from 'crypto'
 import {Buffer} from 'buffer'
 
 const openTorrent = (path) => {
-  return bencode.decode(fs.readFileSync(path),'utf-8');
+  const data = fs.readFileSync(path);
+  // console.log(bencode.decode(data))
+  return bencode.decode(fs.readFileSync(path));
 }
 
- const sizeLeft = torrent => {
+const sizeLeft = torrent => {
+  // console.log("13" , torrent["info"])
   const sizeL = torrent.info.files ? torrent.info.files.map(file => file.length).reduce((a, b) => a + b) : torrent.info.length;
   var str = sizeL.toString('2');
   while (str.length < 64) {
@@ -17,13 +20,13 @@ const openTorrent = (path) => {
   return buf
 }
 
- const infoHash = torrent => {
+const infoHash = torrent => {
   const info = bencode.encode(torrent.info)
   return crypto.createHash('sha1').update(info).digest();
 };
 
 const pieceLen = (torrent, pieceIndex) => {
-  const totalLength = Buffer.readBigInt64BE(sizeLeft(torrent)).toNumber();
+  const totalLength = Number(sizeLeft(torrent).readBigInt64BE());
   const pieceLength = torrent.info['piece length']
   
   const lastPieceLength = totalLength % pieceLength;
@@ -48,4 +51,4 @@ const blockLen = (torrent, pieceIndex, blockIndex) => {
 
 const BLOCK_LEN = Math.pow(2,14)
 
-export default {openTorrent, sizeLeft, infoHash, pieceLen ,BLOCK_LEN}
+export default {openTorrent, sizeLeft, infoHash, pieceLen,blocksPerPiece,blockLen ,BLOCK_LEN}

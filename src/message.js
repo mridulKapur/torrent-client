@@ -1,15 +1,15 @@
-import Buffer from 'buffer'
+import {Buffer} from 'buffer'
 import torrentParser from './torrent-parser.js'
 import util from './util.js'
 
 const buildHandshake = torrent => {
   const buf = Buffer.alloc(68);
-  buf.writeUInt(19, 0);
+  buf.writeUInt8(19, 0);
   buf.write('BitTorrent protocol', 1);
   buf.writeUInt32BE(0, 20);
   buf.writeUInt32BE(0, 24)
   torrentParser.infoHash(torrent).copy(buf, 28)
-  buf.write(util.genId());
+  util.genId().copy(buf, 48);
   return buf;
 }
 
@@ -100,7 +100,7 @@ const buildPort = (payload) => {
 }
 
 const parse = msg => {
-  const id = msg.length > 4 ? mag.readInt8(4) : null
+  const id = msg.length > 4 ? msg.readInt8(4) : null
   var payload = msg.length > 5 ? msg.slice(5) : null
   if (id === 6 || id == 7 || id === 8) {
     const rest = payload.slice(8)
